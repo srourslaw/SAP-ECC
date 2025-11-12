@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Cube, TrendingUp, BarChart3, Layers, ChevronRight, ChevronDown, Database, Calculator, Target } from 'lucide-react';
+import { Box, TrendingUp, BarChart3, Layers, ChevronRight, ChevronDown, Database, Calculator, Target } from 'lucide-react';
 
 interface Hierarchy {
   name: string;
@@ -227,7 +227,7 @@ const SSASCube = () => {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl">
-              <Cube className="w-8 h-8 text-white" />
+              <Box className="w-8 h-8 text-white" />
             </div>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
