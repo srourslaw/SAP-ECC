@@ -102,110 +102,127 @@ const SSISTransformViewer = ({ package: pkg, onClose, getTransformationIcon }: S
         </div>
 
         <div className="p-6">
-          {/* Flow Diagram */}
-          <div className="mb-8">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Data Flow Pipeline</h3>
+          <div className={`grid ${selectedTransform ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'} gap-6`}>
+            {/* Flow Diagram */}
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Data Flow Pipeline</h3>
 
-            <div className="space-y-4">
+              <div className="flex flex-col items-center space-y-0">
               {/* Source Node */}
               <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                className="flex items-center"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="w-full max-w-md"
               >
-                <div className="flex-shrink-0">
-                  <div className="w-48 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg p-4 shadow-lg">
-                    <div className="flex items-center gap-3">
-                      <Database className="w-8 h-8" />
-                      <div>
-                        <div className="font-bold">Source</div>
-                        <div className="text-xs text-blue-100 mt-1 font-mono">{pkg.source}</div>
-                      </div>
-                    </div>
-                    <div className="mt-3 text-sm font-semibold">
-                      {pkg.rowsProcessed.toLocaleString()} rows
+                <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg p-4 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <Database className="w-8 h-8" />
+                    <div>
+                      <div className="font-bold">Source</div>
+                      <div className="text-xs text-blue-100 mt-1 font-mono">{pkg.source}</div>
                     </div>
                   </div>
-                </div>
-
-                <div className="flex-1 flex items-center justify-center">
-                  <ArrowRight className="w-8 h-8 text-gray-400" />
+                  <div className="mt-3 text-sm font-semibold">
+                    {pkg.rowsProcessed.toLocaleString()} rows
+                  </div>
                 </div>
               </motion.div>
 
+              {/* Arrow Down */}
+              <div className="flex flex-col items-center py-2">
+                <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                  {pkg.rowsProcessed.toLocaleString()} rows
+                </div>
+                <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+              </div>
+
               {/* Transformation Nodes */}
               {pkg.transformations.map((transform, index) => (
-                <div key={index}>
+                <div key={index} className="w-full max-w-md">
                   <motion.div
-                    initial={{ x: -50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: (index + 1) * 0.1 }}
-                    className="flex items-center"
                   >
-                    <div className="flex-shrink-0">
-                      <div
-                        onClick={() => setSelectedTransform(transform)}
-                        className={`w-48 border-2 rounded-lg p-4 shadow-lg cursor-pointer hover:shadow-xl transition-all ${getTransformColor(
-                          transform.type
-                        )} ${selectedTransform === transform ? 'ring-2 ring-purple-500' : ''}`}
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-2xl">{getTransformationIcon(transform.type)}</span>
-                          <div className="flex-1">
-                            <div className="font-bold text-sm text-gray-900 dark:text-white">{transform.type}</div>
+                    <div
+                      onClick={() => setSelectedTransform(transform)}
+                      className={`border-2 rounded-lg p-4 shadow-lg cursor-pointer hover:shadow-xl transition-all ${getTransformColor(
+                        transform.type
+                      )} ${selectedTransform === transform ? 'ring-4 ring-purple-500' : ''}`}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-3xl">{getTransformationIcon(transform.type)}</span>
+                        <div className="flex-1">
+                          <div className="font-bold text-sm text-gray-900 dark:text-white">{transform.type}</div>
+                          <div className="text-xs text-gray-700 dark:text-gray-300 font-medium mt-1">
+                            {transform.name}
                           </div>
                         </div>
-                        <div className="text-xs text-gray-700 dark:text-gray-300 font-medium">
-                          {transform.name}
-                        </div>
-                        <div className="mt-2 text-sm font-semibold text-gray-900 dark:text-white">
+                      </div>
+                      <div className="mt-2 flex items-center justify-between">
+                        <div className="text-sm font-semibold text-gray-900 dark:text-white">
                           {rowCounts[index].toLocaleString()} rows
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="flex-1 flex flex-col items-center justify-center px-4">
-                      <ArrowRight className="w-8 h-8 text-gray-400" />
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {rowCounts[index].toLocaleString()} rows
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                          Click for details →
+                        </div>
                       </div>
                     </div>
                   </motion.div>
+
+                  {/* Arrow Down (if not last transformation) */}
+                  {index < pkg.transformations.length - 1 && (
+                    <div className="flex flex-col items-center py-2">
+                      <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                        {rowCounts[index].toLocaleString()} rows
+                      </div>
+                      <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+                    </div>
+                  )}
                 </div>
               ))}
 
+              {/* Arrow Down to Destination */}
+              <div className="flex flex-col items-center py-2">
+                <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                  {rowCounts[rowCounts.length - 1].toLocaleString()} rows
+                </div>
+                <div className="w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+              </div>
+
               {/* Destination Node */}
               <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: (pkg.transformations.length + 1) * 0.1 }}
-                className="flex items-center"
+                className="w-full max-w-md"
               >
-                <div className="flex-shrink-0">
-                  <div className="w-48 bg-gradient-to-r from-green-500 to-green-700 text-white rounded-lg p-4 shadow-lg">
-                    <div className="flex items-center gap-3">
-                      <Database className="w-8 h-8" />
-                      <div>
-                        <div className="font-bold">Destination</div>
-                        <div className="text-xs text-green-100 mt-1 font-mono">{pkg.destination}</div>
-                      </div>
+                <div className="bg-gradient-to-r from-green-500 to-green-700 text-white rounded-lg p-4 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <Database className="w-8 h-8" />
+                    <div>
+                      <div className="font-bold">Destination</div>
+                      <div className="text-xs text-green-100 mt-1 font-mono">{pkg.destination}</div>
                     </div>
-                    <div className="mt-3 text-sm font-semibold">
-                      {rowCounts[rowCounts.length - 1].toLocaleString()} rows loaded
-                    </div>
+                  </div>
+                  <div className="mt-3 text-sm font-semibold">
+                    {rowCounts[rowCounts.length - 1].toLocaleString()} rows loaded
                   </div>
                 </div>
               </motion.div>
             </div>
-          </div>
+            </div>
 
-          {/* Transformation Details Panel */}
-          {selectedTransform && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="card bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-2 border-purple-200 dark:border-purple-800"
-            >
+            {/* Transformation Details Panel - Side by Side */}
+            {selectedTransform && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="card bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-2 border-purple-200 dark:border-purple-800 self-center overflow-y-auto max-h-[80vh]"
+              >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <span className="text-4xl">{getTransformationIcon(selectedTransform.type)}</span>
@@ -318,11 +335,12 @@ const SSISTransformViewer = ({ package: pkg, onClose, getTransformationIcon }: S
                 </div>
               </div>
             </motion.div>
-          )}
+            )}
+          </div>
 
-          {/* Instructions */}
+          {/* Instructions when no transformation is selected */}
           {!selectedTransform && (
-            <div className="card bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800">
+            <div className="card bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 mt-6">
               <div className="flex items-start gap-3">
                 <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
