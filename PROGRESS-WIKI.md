@@ -682,10 +682,243 @@ interface QueryResult {
 
 ---
 
-## ⏳ PROMPT 5: SSIS ETL Visualization
+## ✅ PROMPT 5: SSIS ETL Process Visualization
 
-**Status:** ⏸️ PENDING
-**Estimated Duration:** ~45 minutes
+**Status:** ✅ COMPLETED
+**Date:** November 12, 2025 - 9:00 PM
+**Duration:** ~40 minutes
+
+### What Was Built
+
+#### 1. SSISNode Component (`src/components/pipeline/SSISNode.tsx`)
+
+**3 SSIS Packages Created:**
+- ✅ **Material Master ETL**: Extract from SAP_Materials → DW_Materials
+  - 4 transformations: DataConversion, DerivedColumn, Lookup, ConditionalSplit
+  - 500 rows processed, 3m 24s duration
+  - Schedule: Daily at 02:00 AM
+  - Status: Success (last run 2 hours ago)
+
+- ✅ **Purchase Order Analysis ETL**: Extract from SAP_PurchaseOrders + SAP_Vendors → DW_PurchaseAnalysis
+  - 4 transformations: Merge, Aggregate, DerivedColumn, Sort
+  - 1200 rows processed, 5m 12s duration
+  - Schedule: Every 6 hours
+  - Status: Success (last run 45 minutes ago)
+
+- ✅ **Inventory Movement ETL**: Extract from SAP_MaterialMovements + SAP_Plants → DW_InventoryFacts
+  - 4 transformations: Lookup, Aggregate, DerivedColumn, DataConversion
+  - 6234 rows processed, 2m 45s (currently running)
+  - Schedule: Hourly
+  - Status: Running (67% complete)
+
+**Package Cards Display:**
+- Package name with GitBranch icon
+- Schedule information
+- Source and destination (monospace font)
+- Transformation count badge
+- Last run time with "time ago" format
+- Duration display
+- Rows processed counter
+- Status icons (Success/Running/Failed)
+- Color-coded cards (green/blue/red backgrounds)
+- "View Transformation Flow" button
+
+**Real-time Execution Monitor:**
+- ✅ Toggle visibility with "Show/Hide Execution Monitor" button
+- ✅ Live execution tracking for running packages
+- ✅ Progress bar with percentage (0-100%)
+- ✅ Current phase display
+- ✅ 4 metric cards:
+  - Rows Read: 6,234 (blue)
+  - Rows Written: 5,890 (green)
+  - Errors: 12 (red)
+  - Throughput: 589 rows/s (purple)
+- ✅ Execution log with timestamped messages
+- ✅ Execution ID tracking
+- ✅ Start time display
+- ✅ Animated gradient progress bar (blue to purple)
+
+**Summary Statistics:**
+- Active Packages: 3 (purple)
+- Successful: 2 (green)
+- Running: 1 (blue)
+- Total Rows: 7,934 (orange)
+
+#### 2. SSISTransformViewer Component (`src/components/pipeline/SSISTransformViewer.tsx`)
+
+**Visual Flow Diagram:**
+- ✅ Source node (blue gradient with Database icon)
+  - Shows source table name
+  - Row count display
+- ✅ Transformation boxes (color-coded by type):
+  - DataConversion: Blue (🔄 icon)
+  - DerivedColumn: Green (🧮 icon)
+  - Lookup: Purple (🔍 icon)
+  - Aggregate: Orange (📊 icon)
+  - Sort: Pink (↕️ icon)
+  - Merge: Indigo (🔀 icon)
+  - ConditionalSplit: Yellow (🔀 icon)
+- ✅ Destination node (green gradient with Database icon)
+  - Shows destination table name
+  - Final row count
+- ✅ Animated data flow with ArrowRight icons
+- ✅ Row count indicators between each transformation
+- ✅ Click to select transformation for details
+- ✅ Staggered fade-in animation (0.1s delay per node)
+
+**Transformation Details Panel:**
+- ✅ Opens when clicking on transformation box
+- ✅ Displays:
+  - Transformation icon (emoji)
+  - Transformation name and type
+  - Input columns list (blue dots)
+  - Output columns list (green dots)
+  - Transformation logic (code block with dark theme)
+  - Before/After data comparison (blue/green cards)
+  - Performance metrics:
+    * Rows/second (random 1000-6000)
+    * Avg processing time (random 100-600ms)
+    * Success rate (99.x%)
+- ✅ Close button to deselect transformation
+- ✅ Purple gradient background
+
+**Modal Features:**
+- ✅ Full-screen overlay with semi-transparent backdrop
+- ✅ Click outside to close
+- ✅ Purple gradient header with package name
+- ✅ Scrollable content for long flows
+- ✅ Interactive instructions panel (when no transformation selected)
+- ✅ Scale and fade animations (Framer Motion)
+
+#### 3. Transformation Types Implemented
+
+**DataConversion:**
+- Purpose: Convert SAP date formats to SQL datetime
+- Logic: "Convert SAP YYYYMMDD format to SQL Server DATETIME"
+
+**DerivedColumn:**
+- Purpose: Calculate reorder points, PO aging, stock velocity
+- Logic: Mathematical formulas (e.g., "reorder_point = min_stock + (avg_daily_usage * lead_time_days)")
+
+**Lookup:**
+- Purpose: Enrich with material group descriptions, plant details
+- Logic: Join with reference tables
+
+**Aggregate:**
+- Purpose: Sum movements, monthly spend calculations
+- Logic: GROUP BY operations with SUM/COUNT
+
+**Sort:**
+- Purpose: Order results
+- Logic: ORDER BY clauses
+
+**Merge:**
+- Purpose: Join data from multiple sources
+- Logic: INNER JOIN operations
+
+**ConditionalSplit:**
+- Purpose: Separate data streams based on conditions
+- Logic: IF-THEN branching logic
+
+#### 4. Integration with App.tsx
+- ✅ Imported SSISNode component
+- ✅ Updated renderContent() to show SSISNode on 'reports' tab
+- ✅ All navigation tabs now functional
+
+### Technical Implementation
+
+**TypeScript Interfaces:**
+```typescript
+interface Transformation {
+  type: 'DataConversion' | 'DerivedColumn' | 'Lookup' |
+        'Aggregate' | 'Sort' | 'Merge' | 'ConditionalSplit';
+  name: string;
+  inputColumns: string[];
+  outputColumns: string[];
+  logic: string;
+}
+
+interface SSISPackage {
+  packageName: string;
+  source: string;
+  destination: string;
+  transformations: Transformation[];
+  schedule: string;
+  lastRun: Date;
+  status: 'Success' | 'Running' | 'Failed';
+  duration: string;
+  rowsProcessed: number;
+}
+
+interface SSISExecution {
+  executionId: string;
+  packageName: string;
+  startTime: Date;
+  endTime?: Date;
+  status: 'Running' | 'Success' | 'Failed' | 'Stopped';
+  rowsRead: number;
+  rowsWritten: number;
+  rowsError: number;
+  currentPhase: string;
+  progress: number; // 0-100
+  messages: string[];
+}
+```
+
+**State Management:**
+- selectedPackage: Tracks which package flow to display
+- showExecutionDetails: Toggle execution monitor visibility
+- selectedTransform: Tracks selected transformation in flow viewer
+
+**Key Features:**
+- Row count calculation through pipeline (simulated data loss/gain)
+- Dynamic color coding based on transformation type
+- Time ago formatting for last run display
+- Status icon helpers (CheckCircle, Activity, XCircle)
+- Transformation icon emoji mapping
+- Modal overlay with click-outside-to-close
+- Animated progress bars with gradients
+- Responsive grid layouts
+
+### Visual Design Elements
+
+**Color Scheme:**
+- Blue: DataConversion, source nodes
+- Green: DerivedColumn, destination nodes, success
+- Purple: Lookup, main theme
+- Orange: Aggregate
+- Pink: Sort
+- Indigo: Merge
+- Yellow: ConditionalSplit
+- Gradients: Purple-to-indigo headers, blue-to-purple progress bars
+
+**Animations:**
+- Fade-in cards with staggered delays (0.1s per card)
+- Progress bar width animation (0.5s duration)
+- Pulsing Activity icon for running status
+- Modal scale and fade (0.9 to 1.0 scale)
+- Height expansion for execution monitor (auto height animation)
+
+**Layout:**
+1. Header with execution monitor toggle
+2. Collapsible execution monitor panel
+3. 3-column package grid (responsive)
+4. Full-screen transformation flow modal
+5. Summary statistics panel
+
+### Files Created/Modified
+
+**New Files:**
+1. `src/components/pipeline/SSISNode.tsx` - Main SSIS viewer (600+ lines)
+2. `src/components/pipeline/SSISTransformViewer.tsx` - Flow diagram viewer (500+ lines)
+
+**Modified Files:**
+1. `src/App.tsx` - Added SSISNode import and routing to reports tab
+
+### Next Steps
+- Move to Prompt 6: SSAS Cube Structure
+- Create dimensional model viewer
+- Implement measure groups and KPIs
 
 ---
 
@@ -768,4 +1001,4 @@ Each prompt completion will be committed to git with detailed commit message.
 
 ---
 
-**Last Updated:** November 12, 2025 - 8:45 PM
+**Last Updated:** November 12, 2025 - 9:00 PM

@@ -4,6 +4,7 @@ import PipelineFlow from './components/pipeline/PipelineFlow';
 import SAPDataViewer from './components/data/SAPDataViewer';
 import ReplicationLayer from './components/monitoring/ReplicationLayer';
 import SQLServerNode from './components/data/SQLServerNode';
+import SSISNode from './components/pipeline/SSISNode';
 import { useState } from 'react';
 
 function App() {
@@ -21,16 +22,7 @@ function App() {
       case 'pipeline':
         return <SQLServerNode />;
       case 'reports':
-        return (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} View
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              This view will be available in upcoming prompts (5-10)
-            </p>
-          </div>
-        );
+        return <SSISNode />;
       default:
         return <OverviewContent />;
     }
