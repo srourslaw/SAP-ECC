@@ -2,6 +2,7 @@ import Header from './components/layout/Header';
 import Sidebar from './components/layout/Sidebar';
 import PipelineFlow from './components/pipeline/PipelineFlow';
 import SAPDataViewer from './components/data/SAPDataViewer';
+import ReplicationLayer from './components/monitoring/ReplicationLayer';
 import { useState } from 'react';
 
 function App() {
@@ -14,8 +15,9 @@ function App() {
         return <OverviewContent />;
       case 'data':
         return <SAPDataViewer />;
-      case 'pipeline':
       case 'monitor':
+        return <ReplicationLayer />;
+      case 'pipeline':
       case 'reports':
         return (
           <div className="text-center py-12">
@@ -23,7 +25,7 @@ function App() {
               {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} View
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              This view will be available in upcoming prompts (3-10)
+              This view will be available in upcoming prompts (4-10)
             </p>
           </div>
         );
