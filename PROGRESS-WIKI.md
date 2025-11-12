@@ -747,9 +747,14 @@ interface QueryResult {
 #### 2. SSISTransformViewer Component (`src/components/pipeline/SSISTransformViewer.tsx`)
 
 **Visual Flow Diagram:**
+- ✅ **Vertical Pipeline Layout** (Source → Transformations → Destination)
 - ✅ Source node (blue gradient with Database icon)
   - Shows source table name
   - Row count display
+- ✅ **Vertical Connecting Lines** with row count badges
+  - Replaced horizontal arrows with vertical flow indicators
+  - Line thickness: 0.5px (thin connectors)
+  - Row count badges in gray rounded pills between nodes
 - ✅ Transformation boxes (color-coded by type):
   - DataConversion: Blue (🔄 icon)
   - DerivedColumn: Green (🧮 icon)
@@ -761,12 +766,16 @@ interface QueryResult {
 - ✅ Destination node (green gradient with Database icon)
   - Shows destination table name
   - Final row count
-- ✅ Animated data flow with ArrowRight icons
-- ✅ Row count indicators between each transformation
 - ✅ Click to select transformation for details
 - ✅ Staggered fade-in animation (0.1s delay per node)
+- ✅ Vertical slide-up animation (y: -20 → 0)
 
-**Transformation Details Panel:**
+**Transformation Details Panel (Side-by-Side Layout):**
+- ✅ **Positioned on right side of flow diagram** (not below)
+- ✅ **Vertically centered** alignment with `self-center`
+- ✅ **Two-column grid layout**: Flow (left) + Details (right)
+- ✅ Independent scrolling with `max-h-[80vh]` constraint
+- ✅ Slide-in animation from right (x: 20 → 0)
 - ✅ Opens when clicking on transformation box
 - ✅ Displays:
   - Transformation icon (emoji)
@@ -781,6 +790,7 @@ interface QueryResult {
     * Success rate (99.x%)
 - ✅ Close button to deselect transformation
 - ✅ Purple gradient background
+- ✅ **No scrolling needed** - details visible immediately on the side
 
 **Modal Features:**
 - ✅ Full-screen overlay with semi-transparent backdrop
@@ -905,6 +915,26 @@ interface SSISExecution {
 3. 3-column package grid (responsive)
 4. Full-screen transformation flow modal
 5. Summary statistics panel
+
+### Bug Fixes & Improvements
+
+**Fix 1: Vertical Flow Alignment**
+- ❌ Initial issue: Horizontal arrows (ArrowRight) with vertically stacked boxes
+- ✅ Fixed: Replaced horizontal layout with vertical flow using connecting lines
+- ✅ Changed animation from x-axis to y-axis (horizontal → vertical slide)
+- ✅ Added row count badges on vertical connectors
+
+**Fix 2: Details Panel Positioning**
+- ❌ Initial issue: Details panel appeared below flow diagram, requiring scrolling
+- ✅ Fixed: Moved to side-by-side layout with 2-column grid
+- ✅ Flow diagram stays on left, details panel on right
+- ✅ Changed from `sticky top-6 self-start` to `self-center` for vertical centering
+- ✅ Independent scrolling with max-height constraint
+
+**Fix 3: JSX Structure**
+- ❌ Initial issue: JSX closing tag mismatch during layout refactoring
+- ✅ Fixed: Properly closed all div elements in grid structure
+- ✅ Ensured correct nesting of flow diagram and details panel columns
 
 ### Files Created/Modified
 
