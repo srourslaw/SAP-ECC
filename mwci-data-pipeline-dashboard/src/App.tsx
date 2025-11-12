@@ -3,6 +3,7 @@ import Sidebar from './components/layout/Sidebar';
 import PipelineFlow from './components/pipeline/PipelineFlow';
 import SAPDataViewer from './components/data/SAPDataViewer';
 import ReplicationLayer from './components/monitoring/ReplicationLayer';
+import SQLServerNode from './components/data/SQLServerNode';
 import { useState } from 'react';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       case 'monitor':
         return <ReplicationLayer />;
       case 'pipeline':
+        return <SQLServerNode />;
       case 'reports':
         return (
           <div className="text-center py-12">
@@ -25,7 +27,7 @@ function App() {
               {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} View
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              This view will be available in upcoming prompts (4-10)
+              This view will be available in upcoming prompts (5-10)
             </p>
           </div>
         );
