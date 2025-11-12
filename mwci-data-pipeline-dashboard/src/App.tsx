@@ -5,6 +5,7 @@ import SAPDataViewer from './components/data/SAPDataViewer';
 import ReplicationLayer from './components/monitoring/ReplicationLayer';
 import SQLServerNode from './components/data/SQLServerNode';
 import SSISNode from './components/pipeline/SSISNode';
+import SSASCube from './components/olap/SSASCube';
 import { useState } from 'react';
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
         return <SQLServerNode />;
       case 'reports':
         return <SSISNode />;
+      case 'analytics':
+        return <SSASCube />;
       default:
         return <OverviewContent />;
     }

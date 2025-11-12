@@ -5,6 +5,7 @@ import {
   Activity,
   Database,
   FileSpreadsheet,
+  Cube,
   ChevronRight,
 } from 'lucide-react';
 
@@ -21,6 +22,7 @@ const Sidebar = ({ isOpen, activeTab, onTabChange }: SidebarProps) => {
     { id: 'monitor', label: 'Monitor', icon: Activity },
     { id: 'data', label: 'Data', icon: Database },
     { id: 'reports', label: 'Reports', icon: FileSpreadsheet },
+    { id: 'analytics', label: 'Analytics Cube', icon: Cube },
   ];
 
   if (!isOpen) return null;
