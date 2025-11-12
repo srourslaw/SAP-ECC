@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   LayoutDashboard,
-  Workflow,
+  GitBranch,
   Activity,
   Database,
   FileSpreadsheet,
@@ -10,14 +10,14 @@ import {
 
 interface SidebarProps {
   isOpen: boolean;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-const Sidebar = ({ isOpen }: SidebarProps) => {
-  const [activeTab, setActiveTab] = useState('overview');
-
+const Sidebar = ({ isOpen, activeTab, onTabChange }: SidebarProps) => {
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'pipeline', label: 'Pipeline', icon: Workflow },
+    { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
     { id: 'monitor', label: 'Monitor', icon: Activity },
     { id: 'data', label: 'Data', icon: Database },
     { id: 'reports', label: 'Reports', icon: FileSpreadsheet },
@@ -35,7 +35,7 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => onTabChange(item.id)}
               className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
                 isActive
                   ? 'bg-primary text-white shadow-md'
